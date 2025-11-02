@@ -11,6 +11,8 @@ RUN apt-get update -y && apt-get install -y \
 
 ENV PYTHONPATH="/usr/lib/python3/dist-packages:$PYTHONPATH"
 
+RUN apt-get update -y && apt-get install -y python3-libtorrent
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 CMD ["bash", "-c", "chmod +x /app/entrypoint.sh && /app/entrypoint.sh"]
