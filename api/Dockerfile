@@ -1,15 +1,16 @@
 FROM python:3.11-bookworm
+
 WORKDIR /app
 COPY . .
 
-# Install dependencies
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update -y \
-    && apt-get install python3-libtorrent ffmpeg -y \
-    && apt-get install gcc libpq-dev rsync handbrake handbrake-cli -y
 
-# Install python packages
-ENV PYTHONPATH="/usr/lib/python3/dist-packages":$PYTHONPATH
-RUN pip install -r /app/requirements.txt --no-cache-dir
+RUN apt-get update -y && apt-get install -y \
+    python3-libtorrent ffmpeg gcc libpq-dev rsync handbrake handbrake-cli \
+    && rm -rf /var/lib/apt/lists/*
 
-CMD chmod +x /app/entrypoint.sh && /app/entrypoint.sh
+ENV PYTHONPATH="/usr/lib/python3/dist-packages:$PYTHONPATH"
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["bash", "-c", "chmod +x /app/entrypoint.sh && /app/entrypoint.sh"]
